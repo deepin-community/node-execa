@@ -1,0 +1,64 @@
+{
+  "name": "big-cartesian",
+  "version": "2.0.0",
+  "main": "build/src/main.js",
+  "files": [
+    "build/src",
+    "examples",
+    "!~"
+  ],
+  "scripts": {
+    "test": "gulp test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "gulp check --full"
+    }
+  },
+  "description": "Cartesian product for big inputs",
+  "keywords": [
+    "cartesian",
+    "cartesian-product",
+    "performance",
+    "sets",
+    "functional-programming",
+    "functional",
+    "product",
+    "iterable",
+    "algorithm",
+    "data-structures",
+    "es6",
+    "javascript",
+    "library",
+    "nodejs",
+    "lodash",
+    "lodashjs",
+    "lodash-fp",
+    "cartesian-products",
+    "combinatorics",
+    "combinations"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://git.io/fjxRh",
+  "repository": "ehmicky/big-cartesian",
+  "bugs": {
+    "url": "https://github.com/ehmicky/big-cartesian/issues"
+  },
+  "author": "ehmicky <ehmicky@gmail.com> (https://github.com/ehmicky)",
+  "directories": {
+    "doc": "docs",
+    "lib": "src",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@ehmicky/dev-tasks": "^0.30.71",
+    "ava": "^2.4.0",
+    "gulp": "^4.0.2",
+    "husky": "^3.1.0",
+    "pretty-format": "^24.9.0"
+  },
+  "engines": {
+    "node": ">=10.17.0"
+  }
+}

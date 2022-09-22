@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+include /usr/share/dpkg/pkg-info.mk
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	echo 'int main() { return 0; }' | gcc -x c -o test/fixtures/fast-exit-linux -
+	dh_auto_build --buildsystem=nodejs

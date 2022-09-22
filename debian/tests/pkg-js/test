@@ -1,0 +1,4 @@
+echo 'ava not packaged'
+if [ "$AUTOPKGTEST_TMP" != "" ]; then
+	exit 77
+fi

@@ -1,0 +1,48 @@
+Source: node-execa
+Maintainer: Debian Javascript Maintainers <pkg-javascript-devel@lists.alioth.debian.org>
+Uploaders: Pirate Praveen <praveen@debian.org>
+Section: javascript
+Testsuite: autopkgtest-pkg-nodejs
+Priority: optional
+Build-Depends: debhelper-compat (= 13)
+ , dh-sequence-nodejs
+ , jest <!nocheck>
+ , node-ajv <!nocheck>
+ , node-babel7
+ , node-get-stream <!nocheck>
+ , node-is-stream <!nocheck>
+ , node-merge-stream <!nocheck>
+ , node-mimic-fn <!nocheck>
+ , node-npm-run-path <!nocheck>
+ , node-shebang-command <!nocheck>
+ , node-signal-exit <!nocheck>
+ , node-which <!nocheck>
+Standards-Version: 4.6.0
+Vcs-Browser: https://salsa.debian.org/js-team/node-execa
+Vcs-Git: https://salsa.debian.org/js-team/node-execa.git
+Homepage: https://github.com/sindresorhus/execa
+Rules-Requires-Root: no
+
+Package: node-execa
+Architecture: all
+Depends: ${misc:Depends}
+ , node-get-stream
+ , node-is-stream
+ , node-merge-stream
+ , node-mimic-fn
+ , node-npm-run-path
+ , node-shebang-command
+ , node-signal-exit
+ , node-which
+Provides: ${nodejs:Provides}
+Description: better `child_process`
+ This is better in the following ways:
+  - Promise interface.
+  - Strips EOF from the output so you don't have to `stdout.trim()`.
+  - Supports shebang binaries cross-platform.
+  - Improved Windows support.
+  - Higher max buffer. 10 MB instead of 200 KB.
+  - Executes locally installed binaries by name.
+  - Cleans up spawned processes when the parent process dies.
+ .
+ Node.js is an event-based server-side JavaScript engine.

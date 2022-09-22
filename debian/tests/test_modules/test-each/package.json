@@ -1,0 +1,68 @@
+{
+  "name": "test-each",
+  "version": "2.0.1",
+  "main": "build/src/main.js",
+  "files": [
+    "build/src",
+    "examples",
+    "!*~"
+  ],
+  "scripts": {
+    "test": "gulp test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "gulp -LL check --full"
+    }
+  },
+  "description": "🤖 Repeat tests. Repeat tests. Repeat tests.",
+  "keywords": [
+    "testing",
+    "test",
+    "test-automation",
+    "data-driven",
+    "data-driven-tests",
+    "data-driven-testing",
+    "fuzzing",
+    "fuzz-testing",
+    "fuzz",
+    "cartesian",
+    "snapshot-testing",
+    "code-quality",
+    "continuous-integration",
+    "es6",
+    "javascript",
+    "nodejs",
+    "library",
+    "iterable",
+    "foreach",
+    "functional-programming"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://git.io/fj4Nb",
+  "repository": "ehmicky/test-each",
+  "bugs": {
+    "url": "https://github.com/ehmicky/test-each/issues"
+  },
+  "author": "ehmicky <ehmicky@gmail.com> (https://github.com/ehmicky)",
+  "directories": {
+    "doc": "docs",
+    "lib": "src",
+    "test": "test"
+  },
+  "dependencies": {
+    "big-cartesian": "^2.0.0",
+    "is-plain-obj": "^2.1.0",
+    "pretty-format": "^25.3.0"
+  },
+  "devDependencies": {
+    "@ehmicky/dev-tasks": "^0.31.37",
+    "ava": "^3.7.1",
+    "gulp": "^4.0.2",
+    "husky": "^4.2.5",
+    "is-ci": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=10.17.0"
+  }
+}

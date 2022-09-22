@@ -1,0 +1,41 @@
+version=4
+opts=\
+repacksuffix=+dfsg,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-execa-$1/ \
+ https://github.com/sindresorhus/execa/tags .*/archive/.*/v?([\d\.]+).tar.gz group
+
+opts=\
+ctype=nodejs,\
+component=cross-spawn,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-node-cross-spawn-$1/ \
+ https://github.com/moxystudio/node-cross-spawn/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum
+
+opts=\
+ctype=nodejs,\
+component=human-signals,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-human-signals-$1/ \
+ https://github.com/ehmicky/human-signals/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum
+
+opts=\
+ctype=nodejs,\
+component=onetime,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-onetime-$1/ \
+ https://github.com/sindresorhus/onetime/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum
+
+opts=\
+ctype=nodejs,\
+component=path-key,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-path-key-$1/ \
+ https://github.com/sindresorhus/path-key/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum
+
+opts=\
+ctype=nodejs,\
+component=strip-final-newline,\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-strip-final-newline-$1/ \
+ https://github.com/sindresorhus/strip-final-newline/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum

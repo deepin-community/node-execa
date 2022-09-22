@@ -1,0 +1,88 @@
+node-execa (4.1.0+dfsg+~cs19.3.6-6) unstable; urgency=medium
+
+  * Team upload
+  * Fix GitHub tags regex
+  * Update standards version to 4.6.0, no changes needed.
+  * Fix filenamemangle
+  * Drop nodejs dependency
+
+ -- Yadd <yadd@debian.org>  Fri, 12 Nov 2021 19:37:41 +0100
+
+node-execa (4.1.0+dfsg+~cs19.3.6-5) unstable; urgency=medium
+
+  * Team upload
+  * Add missing test dependency to node-ajv (Closes: #980648)
+
+ -- Xavier Guimard <yadd@debian.org>  Thu, 21 Jan 2021 06:01:35 +0100
+
+node-execa (4.1.0+dfsg+~cs19.3.6-4) unstable; urgency=medium
+
+  * Team upload
+  * Don't export cross-spawn (removed for security reasons, but used here
+    because execa used some of its functions, see #958403)
+  * Use ${nodejs:Provides} to build "Provides" field
+  * Remove build dependency to jq
+  * Add ctype=nodejs to component(s)
+
+ -- Xavier Guimard <yadd@debian.org>  Sat, 05 Dec 2020 22:44:18 +0100
+
+node-execa (4.1.0+dfsg+~cs19.3.6-3) unstable; urgency=medium
+
+  * Team upload.
+
+  * unhide embedded modules cross-spawn path-key
+    as virtual packages node-cross-spawn node-path-key;
+    build-depend on jq
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 05 Dec 2020 22:31:38 +0100
+
+node-execa (4.1.0+dfsg+~cs19.3.6-2) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable after successful tests
+
+ -- Xavier Guimard <yadd@debian.org>  Fri, 27 Nov 2020 06:04:54 +0100
+
+node-execa (4.1.0+dfsg+~cs19.3.6-1) experimental; urgency=medium
+
+  * Team upload
+
+  [ Debian Janitor ]
+  * Bump debhelper from old 11 to 12.
+  * Set debhelper-compat version in Build-Depends.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+  [ Xavier Guimard ]
+  * Declare compliance with policy 4.5.1
+  * Modernize debian/watch
+  * Update dependencies:
+    + add node-merge-stream, node-shebang-command, node-which
+    + remove node-cross-spawn node-p-finally node-strip-eof (Closes: #959786)
+  * Use dh-sequence-nodejs auto install (Closes: #974230)
+  * Embed cross-spawn human-signal, onetime and strip-final-newline
+  * New upstream version 4.1.0+dfsg+~cs19.3.6
+  * Update build
+  * Enable components tests using jest instead of ava (no main test: ava
+    cannot be replaced by jest here)
+  * Drop unneeded version constraints from (build) dependencies
+
+ -- Xavier Guimard <yadd@debian.org>  Thu, 26 Nov 2020 12:46:19 +0100
+
+node-execa (0.10.0+dfsg-1) unstable; urgency=medium
+
+  * Team upload.
+
+  * New upstream version
+  * Update Vcs fields for migration to https://salsa.debian.org/
+  * Bump standard version
+  * Bump debhelper compat
+  * Remove precompiled binaries
+
+ -- Paolo Greppi <paolo.greppi@libpf.com>  Thu, 26 Apr 2018 08:59:40 +0200
+
+node-execa (0.5.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #845607)
+
+ -- Pirate Praveen <praveen@debian.org>  Fri, 25 Nov 2016 12:06:49 +0530
