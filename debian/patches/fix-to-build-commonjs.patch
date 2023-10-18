@@ -1,0 +1,36 @@
+Description: patch applied just during commonjs generation
+Author: Yadd <yadd@debian.org>
+Forwarded: not-needed
+Last-Update: 2022-03-30
+
+--- a/index.js
++++ b/index.js
+@@ -2,7 +2,7 @@
+ import path from 'node:path';
+ import childProcess from 'node:child_process';
+ import process from 'node:process';
+-import crossSpawn from 'cross-spawn';
++const crossSpawn = require('cross-spawn');
+ import stripFinalNewline from 'strip-final-newline';
+ import {npmRunPathEnv} from 'npm-run-path';
+ import onetime from 'onetime';
+--- a/lib/kill.js
++++ b/lib/kill.js
+@@ -1,5 +1,5 @@
+ import os from 'node:os';
+-import { onExit } from 'signal-exit';
++const { onExit } = require('signal-exit');
+ 
+ const DEFAULT_FORCE_KILL_TIMEOUT = 1000 * 5;
+ 
+--- a/lib/stream.js
++++ b/lib/stream.js
+@@ -1,6 +1,6 @@
+ import {isStream} from 'is-stream';
+-import getStream from 'get-stream';
+-import mergeStream from 'merge-stream';
++const getStream = require('get-stream');
++const mergeStream = require('merge-stream');
+ 
+ // `input` option
+ export const handleInput = (spawned, input) => {

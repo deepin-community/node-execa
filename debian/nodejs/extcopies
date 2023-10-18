@@ -1,0 +1,6 @@
+get-stream
+is-stream
+merge-stream
+npm-run-path
+signal-exit
+strip-final-newline

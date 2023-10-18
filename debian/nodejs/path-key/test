@@ -1,1 +1,0 @@
-jest --ci --testRegex 'test.js'

@@ -1,4 +1,7 @@
+# Same author
+add-component-copyright onetime *
+
 # Test data
-source-is-missing debian/tests/test_modules/test-each/build/src/title.js line length is 960 characters (>512)
-source-contains-prebuilt-javascript-object debian/tests/test_modules/test-each/build/src/title.js line length is 960 characters (>512)
-very-long-line-length-in-source-file debian/tests/test_modules/test-each/build/src/title.js line length is 960 characters (>512)
+source-is-missing [debian/tests/test_modules/test-each/build/src/title.js]
+source-contains-prebuilt-javascript-object [debian/tests/test_modules/test-each/build/src/title.js]
+very-long-line-length-in-source-file 960 > 512 [debian/tests/test_modules/test-each/build/src/title.js:2]

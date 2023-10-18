@@ -12,3 +12,9 @@ include /usr/share/dpkg/pkg-info.mk
 override_dh_auto_build:
 	echo 'int main() { return 0; }' | gcc -x c -o test/fixtures/fast-exit-linux -
 	dh_auto_build --buildsystem=nodejs
+	DEST_FILE=execa.cjs START_FILE=index.js rollup -c debian/rollup.config.js
+	perl -i -pe 's/node://g' execa.cjs
+	cp debian/index.cjs index.cjs
+
+override_dh_auto_test:
+	# No test during build to avoid circular dependencies

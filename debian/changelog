@@ -1,3 +1,122 @@
+node-execa (6.1.0+dfsg1+~cs16.0.4-9) unstable; urgency=medium
+
+  * Team upload
+  * Update lintian override info format in d/source/lintian-overrides
+    on line 5-7
+  * Update standards version to 4.6.2, no changes needed
+  * Add patch for node-signal-exit >= 4
+
+ -- Yadd <yadd@debian.org>  Fri, 18 Aug 2023 07:29:25 +0400
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-8) unstable; urgency=medium
+
+  * Team upload
+  * Update standards version to 4.6.1, no changes needed.
+  * Fix rollup configuration for rollup 3 (Closes: #1022624)
+
+ -- Yadd <yadd@debian.org>  Wed, 26 Oct 2022 12:32:19 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-7) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable
+
+ -- Yadd <yadd@debian.org>  Mon, 25 Apr 2022 08:46:01 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-6) experimental; urgency=medium
+
+  * Team upload
+  * Fix human-signal export
+  * Require node-strip-eof >= 3.0.0-4~
+
+ -- Yadd <yadd@debian.org>  Sun, 24 Apr 2022 21:44:53 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-5) experimental; urgency=medium
+
+  * Team upload
+  * Better commonjs export
+
+ -- Yadd <yadd@debian.org>  Fri, 08 Apr 2022 17:14:38 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-4) unstable; urgency=medium
+
+  * Team upload
+  * Source-only upload
+
+ -- Yadd <yadd@debian.org>  Fri, 08 Apr 2022 12:24:09 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-3) unstable; urgency=medium
+
+  * Team upload
+  * Binary upload to break temporary circular dependency
+
+ -- Yadd <yadd@debian.org>  Thu, 07 Apr 2022 19:16:08 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-2) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable
+
+ -- Yadd <yadd@debian.org>  Wed, 06 Apr 2022 17:04:28 +0200
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-1) experimental; urgency=medium
+
+  * Team upload
+  * Drop component path-key (provided by node-npm-run-path)
+  * Don't launch test during build to avoid circular dependency
+
+ -- Yadd <yadd@debian.org>  Thu, 31 Mar 2022 10:32:16 +0200
+
+node-execa (6.1.0~dfsg+~cs20.0.4-4) experimental; urgency=medium
+
+  * Team upload
+  * Fix build links
+
+ -- Yadd <yadd@debian.org>  Thu, 31 Mar 2022 06:44:40 +0200
+
+node-execa (6.1.0~dfsg+~cs20.0.4-3) experimental; urgency=medium
+
+  * Team upload
+  * Build bundled commonjs file exposing old API using rollup and
+    @rollup/plugin-node-resolve
+  * Update dependencies to get ES files
+
+ -- Yadd <yadd@debian.org>  Wed, 30 Mar 2022 22:42:36 +0200
+
+node-execa (6.1.0~dfsg+~cs20.0.4-2) experimental; urgency=medium
+
+  * Team upload
+  * Require node-is-stream >= 3
+  * Indicate that execa 6 breaks jest < 27.5.1~ds+~cs69.51.22-3~
+
+ -- Yadd <yadd@debian.org>  Fri, 18 Feb 2022 18:38:24 +0100
+
+node-execa (6.1.0~dfsg+~cs20.0.4-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream version 6.1.0~dfsg+~cs20.0.4
+  * Build commonjs files
+  * Update components tests (tape instead of jest to replace ava)
+  * Update copyright
+
+ -- Yadd <yadd@debian.org>  Fri, 18 Feb 2022 17:30:06 +0100
+
+node-execa (5.1.1+repack+~cs17.3.6-1) unstable; urgency=medium
+
+  * Team upload
+  * Replace embedded component strip-final-newline by dependency to virtual
+    node-strip-final-newline and repack
+
+ -- Yadd <yadd@debian.org>  Wed, 01 Dec 2021 12:56:50 +0100
+
+node-execa (5.1.1+dfsg+~cs19.3.6-1) unstable; urgency=medium
+
+  * Team upload
+  * Transition: don't install strip-final-newline in nodejs root directories
+  * New upstream version 5.1.1+dfsg+~cs19.3.6
+
+ -- Yadd <yadd@debian.org>  Tue, 30 Nov 2021 14:50:32 +0100
+
 node-execa (4.1.0+dfsg+~cs19.3.6-6) unstable; urgency=medium
 
   * Team upload

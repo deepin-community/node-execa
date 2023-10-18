@@ -1,2 +1,5 @@
 human-signals/build/
+execa.cjs
+index.cjs
+onetime/index.cjs
 test/fixtures/fast-exit-linux

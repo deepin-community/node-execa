@@ -5,19 +5,18 @@ Section: javascript
 Testsuite: autopkgtest-pkg-nodejs
 Priority: optional
 Build-Depends: debhelper-compat (= 13)
- , dh-sequence-nodejs
- , jest <!nocheck>
- , node-ajv <!nocheck>
+ , dh-sequence-nodejs (>= 0.14.12~)
  , node-babel7
- , node-get-stream <!nocheck>
- , node-is-stream <!nocheck>
- , node-merge-stream <!nocheck>
- , node-mimic-fn <!nocheck>
- , node-npm-run-path <!nocheck>
- , node-shebang-command <!nocheck>
- , node-signal-exit <!nocheck>
- , node-which <!nocheck>
-Standards-Version: 4.6.0
+ , node-get-stream
+ , node-is-stream (>= 3)
+ , node-merge-stream
+ , node-npm-run-path (>= 5.1.0+~4.0.0~)
+ , node-signal-exit (>= 4~)
+ , node-strip-eof (>= 3.0.0-4~)
+ , node-rollup-plugin-commonjs
+ , node-rollup-plugin-node-resolve
+ , rollup
+Standards-Version: 4.6.2
 Vcs-Browser: https://salsa.debian.org/js-team/node-execa
 Vcs-Git: https://salsa.debian.org/js-team/node-execa.git
 Homepage: https://github.com/sindresorhus/execa
@@ -27,14 +26,16 @@ Package: node-execa
 Architecture: all
 Depends: ${misc:Depends}
  , node-get-stream
- , node-is-stream
+ , node-is-stream (>= 3)
  , node-merge-stream
- , node-mimic-fn
- , node-npm-run-path
+ , node-mimic-fn (>= 4)
+ , node-npm-run-path (>= 5.1.0+~4.0.0~)
  , node-shebang-command
- , node-signal-exit
+ , node-signal-exit (>= 4~)
+ , node-strip-eof (>= 3.0.0-4~)
  , node-which
 Provides: ${nodejs:Provides}
+Breaks: jest (<< 27.5.1~ds+~cs69.51.22-3~)
 Description: better `child_process`
  This is better in the following ways:
   - Promise interface.

@@ -1,18 +1,17 @@
 import { isDeepStrictEqual } from 'util'
 
-import test from 'ava'
-import { each } from 'test-each'
 import Ajv from 'ajv'
-
-import { signalsByName, signalsByNumber } from '../src/main.js'
+import test from 'ava'
+import { signalsByName, signalsByNumber } from 'human-signals'
+import { each } from 'test-each'
 
 const ajv = new Ajv({})
 
-const validate = function(value, schema) {
+const validate = function (value, schema) {
   const isValid = ajv.validate(schema, value)
 
   if (isValid) {
-    return
+    return true
   }
 
   return ajv.errorsText(ajv.errors, { separator: '\n' })
@@ -48,17 +47,17 @@ each(
     { title: 'signalsByNumber', signals: signalsByNumber },
   ],
   ({ title }, { signals }) => {
-    test(`Shape | ${title}`, t => {
-      t.is(validate(signals, JSON_SCHEMA), undefined)
+    test(`Shape | ${title}`, (t) => {
+      t.is(validate(signals, JSON_SCHEMA), true)
     })
   },
 )
 
-test('Object keys | signalsByName', t => {
+test('Object keys | signalsByName', (t) => {
   t.true(Object.entries(signalsByName).every(([key, { name }]) => key === name))
 })
 
-test('Object keys | signalsByNumber', t => {
+test('Object keys | signalsByNumber', (t) => {
   t.true(
     Object.entries(signalsByNumber).every(
       ([key, { number }]) => key === String(number),
@@ -66,9 +65,9 @@ test('Object keys | signalsByNumber', t => {
   )
 })
 
-test('Same signals', t => {
+test('Same signals', (t) => {
   t.true(
-    Object.values(signalsByNumber).every(signal =>
+    Object.values(signalsByNumber).every((signal) =>
       isDeepStrictEqual(signal, signalsByName[signal.name]),
     ),
   )

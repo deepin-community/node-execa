@@ -1,0 +1,104 @@
+Description: replace ava by tape
+Author: Yadd <yadd@debian.org>
+Forwarded: not-needed
+Last-Update: 2022-02-18
+
+--- a/human-signals/test/main.js
++++ b/human-signals/test/main.js
+@@ -1,9 +1,8 @@
+-import { isDeepStrictEqual } from 'util'
+-
+-import Ajv from 'ajv'
+-import test from 'ava'
+-import { signalsByName, signalsByNumber } from 'human-signals'
+-import { each } from 'test-each'
++const { isDeepStrictEqual } = require('util');
++const Ajv = require('ajv');
++const test = require('tape');
++const { signalsByName, signalsByNumber } = require('human-signals');
++const { each } = require('test-each');
+ 
+ const ajv = new Ajv({})
+ 
+@@ -41,20 +40,21 @@
+   },
+ }
+ 
+-each(
+-  [
+-    { title: 'signalsByName', signals: signalsByName },
+-    { title: 'signalsByNumber', signals: signalsByNumber },
+-  ],
+-  ({ title }, { signals }) => {
++const ts = [
++  { title: 'signalsByName', signals: signalsByName },
++  { title: 'signalsByNumber', signals: signalsByNumber }
++]
++ts.forEach( ({title,signals}) => {
+     test(`Shape | ${title}`, (t) => {
+       t.is(validate(signals, JSON_SCHEMA), true)
++      t.end();
+     })
+-  },
++  }
+ )
+ 
+ test('Object keys | signalsByName', (t) => {
+   t.true(Object.entries(signalsByName).every(([key, { name }]) => key === name))
++  t.end();
+ })
+ 
+ test('Object keys | signalsByNumber', (t) => {
+@@ -63,6 +63,7 @@
+       ([key, { number }]) => key === String(number),
+     ),
+   )
++  t.end();
+ })
+ 
+ test('Same signals', (t) => {
+@@ -71,4 +72,5 @@
+       isDeepStrictEqual(signal, signalsByName[signal.name]),
+     ),
+   )
++  t.end();
+ })
+--- a/onetime/test.js
++++ b/onetime/test.js
+@@ -1,5 +1,5 @@
+-import test from 'ava';
+-import onetime from './index.js';
++const test = require('tape');
++const onetime = require('./');
+ 
+ test('call function once', t => {
+ 	let i = 0;
+@@ -7,12 +7,14 @@
+ 	t.is(fixture(), 1);
+ 	t.is(fixture(), 1);
+ 	t.is(fixture(), 1);
++	t.end();
+ });
+ 
+ test('option to throw is called more than once', t => {
+ 	const fixture = onetime(() => {}, {throw: true});
+ 	fixture();
+ 	t.throws(fixture, {message: /Function .* can only be called once/});
++	t.end();
+ });
+ 
+ test('`callCount` method', t => {
+@@ -22,6 +24,7 @@
+ 	fixture();
+ 	fixture();
+ 	t.is(onetime.callCount(fixture), 3);
++	t.end();
+ });
+ 
+ test('`callCount` method - throw on non-onetime-wrapped functions', t => {
+@@ -30,4 +33,5 @@
+ 	t.throws(() => {
+ 		onetime.callCount(fixture);
+ 	}, {message: /not wrapped/});
++	t.end();
+ });
