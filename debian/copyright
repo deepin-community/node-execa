@@ -5,7 +5,6 @@ Source: https://github.com/sindresorhus/execa#readme
  https://github.com/moxystudio/node-cross-spawn/tags
  https://github.com/ehmicky/human-signals/tags
  https://github.com/sindresorhus/onetime/tags
- https://github.com/sindresorhus/path-key/tags
  https://github.com/sindresorhus/strip-final-newline/tags
 Comment: removing precompiled binaries
 Files-Excluded: test/fixtures/fast-exit-*
@@ -14,14 +13,22 @@ Files: *
 Copyright: 2016-2018, Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 License: Expat
 
+Files: cross-spawn/*
+Copyright: 2018 Made With MOXY Lda <hello@moxy.studio>
+License: Expat
+
 Files: debian/*
 Copyright: 2016, Pirate Praveen <praveen@debian.org>
  2018, Paolo Greppi <paolo.greppi@libpf.com>
- 2020, Yadd <yadd@debian.org>
+ 2020-2022, Yadd <yadd@debian.org>
 License: Expat
 
 Files: debian/tests/test_modules/big-cartesian/*
  debian/tests/test_modules/test-each/*
+Copyright: ehmicky <ehmicky@gmail.com>
+License: Apache-2.0
+
+Files: human-signals/*
 Copyright: ehmicky <ehmicky@gmail.com>
 License: Apache-2.0
 

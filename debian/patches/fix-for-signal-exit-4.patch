@@ -1,0 +1,14 @@
+Description: fix for signal-exit 4
+Author: Yadd <yadd@debian.org>
+Forwarded: not-needed
+Last-Update: 2023-08-17
+
+--- a/lib/kill.js
++++ b/lib/kill.js
+@@ -1,5 +1,5 @@
+ import os from 'node:os';
+-import onExit from 'signal-exit';
++import { onExit } from 'signal-exit';
+ 
+ const DEFAULT_FORCE_KILL_TIMEOUT = 1000 * 5;
+ 

@@ -1,1 +1,1 @@
-jest --ci --testRegex 'test.js'
+tape test.js
