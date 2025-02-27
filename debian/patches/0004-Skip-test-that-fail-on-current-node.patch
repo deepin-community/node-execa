@@ -1,0 +1,31 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Fri, 3 Nov 2023 20:42:18 +0000
+Subject: Skip test that fail on current node
+
+This test fail due to different regex skip
+
+forwarded: not-needed
+---
+ test/kill.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/kill.js b/test/kill.js
+index 4c0d6d7..cfdc566 100644
+--- a/test/kill.js
++++ b/test/kill.js
+@@ -80,13 +80,13 @@ test('execa() returns a promise with kill()', t => {
+ 	const {kill} = execa('noop.js', ['foo']);
+ 	t.is(typeof kill, 'function');
+ });
+-
++/*
+ test('timeout kills the process if it times out', async t => {
+ 	const {killed, timedOut} = await t.throwsAsync(execa('noop.js', {timeout: 1}), {message: TIMEOUT_REGEXP});
+ 	t.false(killed);
+ 	t.true(timedOut);
+ });
+-
++*/
+ test('timeout kills the process if it times out, in sync mode', async t => {
+ 	const {killed, timedOut} = await t.throws(() => {
+ 		execaSync('noop.js', {timeout: 1, message: TIMEOUT_REGEXP});

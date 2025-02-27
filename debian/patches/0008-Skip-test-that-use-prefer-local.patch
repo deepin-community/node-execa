@@ -1,0 +1,32 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Sat, 4 Nov 2023 15:19:21 +0000
+Subject: Skip test that use prefer local
+
+This test are not runnable with debian ava
+
+Forwarded: not-needed
+---
+ test/test.js | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/test/test.js b/test/test.js
+index ab55c2f..be57151 100644
+--- a/test/test.js
++++ b/test/test.js
+@@ -83,7 +83,7 @@ const getPathWithoutLocalDir = () => {
+ };
+ 
+ const BIN_DIR_REGEXP = /node_modules[\\/]\.bin/;
+-
++/*
+ test('preferLocal: true', async t => {
+ 	await t.notThrowsAsync(execa('ava', ['--version'], {preferLocal: true, env: getPathWithoutLocalDir()}));
+ });
+@@ -110,6 +110,7 @@ test('localDir option', async t => {
+ 	const envPaths = stdout.split(path.delimiter);
+ 	t.true(envPaths.some(envPath => envPath.endsWith('.bin')));
+ });
++*/
+ /*
+ test('execPath option', async t => {
+ 	const {path: execPath} = await getNode('16.0.0');

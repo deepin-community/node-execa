@@ -1,3 +1,8 @@
-export-commonjs-files.patch
-replace-ava-by-tape.patch
-fix-for-signal-exit-4.patch
+0001-export-commonjs-files.patch
+0002-Avoid-to-package-tempfile-and-other-package.patch
+0003-Do-not-test-something-that-depends-of-node-internal.patch
+0004-Skip-test-that-fail-on-current-node.patch
+0005-Skip-test-that-fail-on-stderr-stdout.patch
+0006-Emulate-cross-spawn-parse.patch
+0007-Remove-ava.config.js.patch
+0008-Skip-test-that-use-prefer-local.patch

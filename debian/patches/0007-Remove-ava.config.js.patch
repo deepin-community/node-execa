@@ -1,0 +1,19 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Sat, 4 Nov 2023 14:58:21 +0000
+Subject: Remove ava.config.js
+
+Need a custom package. Not needed for debian
+
+Forwarded: not-needed
+---
+ human-signals/ava.config.js | 1 -
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 human-signals/ava.config.js
+
+diff --git a/human-signals/ava.config.js b/human-signals/ava.config.js
+deleted file mode 100644
+index 052c894..0000000
+--- a/human-signals/ava.config.js
++++ /dev/null
+@@ -1 +0,0 @@
+-export { default } from '@ehmicky/dev-tasks/ava.config.js'

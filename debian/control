@@ -7,7 +7,7 @@ Priority: optional
 Build-Depends: debhelper-compat (= 13)
  , dh-sequence-nodejs (>= 0.14.12~)
  , node-babel7
- , node-get-stream
+ , node-get-stream (>= 8.0.0~)
  , node-is-stream (>= 3)
  , node-merge-stream
  , node-npm-run-path (>= 5.1.0+~4.0.0~)
@@ -16,6 +16,13 @@ Build-Depends: debhelper-compat (= 13)
  , node-rollup-plugin-commonjs
  , node-rollup-plugin-node-resolve
  , rollup
+ , node-mimic-fn <!nocheck>
+ , node-p-event <!nocheck>
+ , ava <!nocheck>
+ , node-ajv <!nocheck>
+ , node-semver <!nocheck>
+ , node-util <!nocheck>
+ , jest <!nocheck>
 Standards-Version: 4.6.2
 Vcs-Browser: https://salsa.debian.org/js-team/node-execa
 Vcs-Git: https://salsa.debian.org/js-team/node-execa.git
@@ -25,7 +32,7 @@ Rules-Requires-Root: no
 Package: node-execa
 Architecture: all
 Depends: ${misc:Depends}
- , node-get-stream
+ , node-get-stream (>= 8.0.0~)
  , node-is-stream (>= 3)
  , node-merge-stream
  , node-mimic-fn (>= 4)

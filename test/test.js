@@ -4,10 +4,10 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import test from 'ava';
 import isRunning from 'is-running';
 import getNode from 'get-node';
-import semver from 'semver';
-import {execa, execaSync} from '../index.js';
+import {execa, execaSync, $} from '../index.js';
+import {setFixtureDir, PATH_KEY} from './helpers/fixtures-dir.js';
 
-process.env.PATH = fileURLToPath(new URL('fixtures', import.meta.url)) + path.delimiter + process.env.PATH;
+setFixtureDir();
 process.env.FOO = 'foo';
 
 const ENOENT_REGEXP = process.platform === 'win32' ? /failed with exit code 1/ : /spawn.* ENOENT/;
@@ -77,16 +77,31 @@ test('stripFinalNewline in sync mode on failure', t => {
 	t.is(stderr, 'foo');
 });
 
+const getPathWithoutLocalDir = () => {
+	const newPath = process.env[PATH_KEY].split(path.delimiter).filter(pathDir => !BIN_DIR_REGEXP.test(pathDir)).join(path.delimiter);
+	return {[PATH_KEY]: newPath};
+};
+
+const BIN_DIR_REGEXP = /node_modules[\\/]\.bin/;
+
 test('preferLocal: true', async t => {
-	await t.notThrowsAsync(execa('ava', ['--version'], {preferLocal: true, env: {Path: '', PATH: ''}}));
+	await t.notThrowsAsync(execa('ava', ['--version'], {preferLocal: true, env: getPathWithoutLocalDir()}));
 });
 
 test('preferLocal: false', async t => {
-	await t.throwsAsync(execa('ava', ['--version'], {preferLocal: false, env: {Path: '', PATH: ''}}), {message: ENOENT_REGEXP});
+	await t.throwsAsync(execa('ava', ['--version'], {preferLocal: false, env: getPathWithoutLocalDir()}), {message: ENOENT_REGEXP});
 });
 
 test('preferLocal: undefined', async t => {
-	await t.throwsAsync(execa('ava', ['--version'], {env: {Path: '', PATH: ''}}), {message: ENOENT_REGEXP});
+	await t.throwsAsync(execa('ava', ['--version'], {env: getPathWithoutLocalDir()}), {message: ENOENT_REGEXP});
+});
+
+test('preferLocal: undefined with $', async t => {
+	await t.notThrowsAsync($({env: getPathWithoutLocalDir()})`ava --version`);
+});
+
+test('preferLocal: undefined with $.sync', t => {
+	t.notThrows(() => $({env: getPathWithoutLocalDir()}).sync`ava --version`);
 });
 
 test('localDir option', async t => {
@@ -97,9 +112,9 @@ test('localDir option', async t => {
 });
 
 test('execPath option', async t => {
-	const {path: execPath} = await getNode('6.0.0');
+	const {path: execPath} = await getNode('16.0.0');
 	const {stdout} = await execa('node', ['-p', 'process.env.Path || process.env.PATH'], {preferLocal: true, execPath});
-	t.true(stdout.includes('6.0.0'));
+	t.true(stdout.includes('16.0.0'));
 });
 
 test('stdin errors are handled', async t => {
@@ -167,9 +182,7 @@ if (process.platform !== 'win32') {
 	});
 
 	test('execa() rejects with correct error and doesn\'t throw if running non-executable with input', async t => {
-		// On Node <12.6.0, `EACCESS` is emitted on `childProcess`.
-		// On Node >=12.6.0, `EPIPE` is emitted on `childProcess.stdin`.
-		await t.throwsAsync(execa('non-executable.js', {input: 'Hey!'}), {message: /EACCES|EPIPE/});
+		await t.throwsAsync(execa('non-executable.js', {input: 'Hey!'}), {message: /EACCES/});
 	});
 }
 
@@ -192,12 +205,12 @@ test('use environment variables by default', async t => {
 });
 
 test('extend environment variables by default', async t => {
-	const {stdout} = await execa('environment.js', [], {env: {BAR: 'bar'}});
+	const {stdout} = await execa('environment.js', [], {env: {BAR: 'bar', [PATH_KEY]: process.env[PATH_KEY]}});
 	t.deepEqual(stdout.split('\n'), ['foo', 'bar']);
 });
 
 test('do not extend environment with `extendEnv: false`', async t => {
-	const {stdout} = await execa('environment.js', [], {env: {BAR: 'bar', PATH: process.env.PATH}, extendEnv: false});
+	const {stdout} = await execa('environment.js', [], {env: {BAR: 'bar', [PATH_KEY]: process.env[PATH_KEY]}, extendEnv: false});
 	t.deepEqual(stdout.split('\n'), ['undefined', 'bar']);
 });
 
@@ -207,21 +220,19 @@ test('can use `options.cwd` as a string', async t => {
 	t.is(path.toNamespacedPath(stdout), path.toNamespacedPath(cwd));
 });
 
-if (semver.satisfies(process.version, '^14.18.0 || >=16.4.0')) {
-	test('localDir option can be a URL', async t => {
-		const command = process.platform === 'win32' ? 'echo %PATH%' : 'echo $PATH';
-		const {stdout} = await execa(command, {shell: true, preferLocal: true, localDir: pathToFileURL('/test')});
-		const envPaths = stdout.split(path.delimiter);
-		t.true(envPaths.some(envPath => envPath.endsWith('.bin')));
-	});
+test('localDir option can be a URL', async t => {
+	const command = process.platform === 'win32' ? 'echo %PATH%' : 'echo $PATH';
+	const {stdout} = await execa(command, {shell: true, preferLocal: true, localDir: pathToFileURL('/test')});
+	const envPaths = stdout.split(path.delimiter);
+	t.true(envPaths.some(envPath => envPath.endsWith('.bin')));
+});
 
-	test('can use `options.cwd` as a URL', async t => {
-		const cwd = '/';
-		const cwdUrl = pathToFileURL(cwd);
-		const {stdout} = await execa('node', ['-p', 'process.cwd()'], {cwd: cwdUrl});
-		t.is(path.toNamespacedPath(stdout), path.toNamespacedPath(cwd));
-	});
-}
+test('can use `options.cwd` as a URL', async t => {
+	const cwd = '/';
+	const cwdUrl = pathToFileURL(cwd);
+	const {stdout} = await execa('node', ['-p', 'process.cwd()'], {cwd: cwdUrl});
+	t.is(path.toNamespacedPath(stdout), path.toNamespacedPath(cwd));
+});
 
 test('can use `options.shell: true`', async t => {
 	const {stdout} = await execa('node test/fixtures/noop.js foo', {shell: true});

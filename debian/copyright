@@ -13,10 +13,6 @@ Files: *
 Copyright: 2016-2018, Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 License: Expat
 
-Files: cross-spawn/*
-Copyright: 2018 Made With MOXY Lda <hello@moxy.studio>
-License: Expat
-
 Files: debian/*
 Copyright: 2016, Pirate Praveen <praveen@debian.org>
  2018, Paolo Greppi <paolo.greppi@libpf.com>

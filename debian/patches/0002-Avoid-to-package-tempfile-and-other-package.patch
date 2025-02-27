@@ -1,0 +1,222 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Thu, 2 Nov 2023 00:28:56 +0000
+Subject: Avoid to package tempfile and other package
+
+forwarded: not-needed
+---
+ test/kill.js   | 13 ++++++++-----
+ test/pipe.js   |  6 +++---
+ test/stream.js | 14 +++++++-------
+ test/test.js   | 10 +++++-----
+ 4 files changed, 23 insertions(+), 20 deletions(-)
+
+diff --git a/test/kill.js b/test/kill.js
+index 42bd53f..3f0566e 100644
+--- a/test/kill.js
++++ b/test/kill.js
+@@ -1,7 +1,7 @@
+ import process from 'node:process';
+ import test from 'ava';
+ import {pEvent} from 'p-event';
+-import isRunning from 'is-running';
++///import isRunning from 'is-running';
+ import {execa, execaSync} from '../index.js';
+ import {setFixtureDir} from './helpers/fixtures-dir.js';
+ 
+@@ -22,6 +22,7 @@ test('kill("SIGKILL") should terminate cleanly', async t => {
+ // `SIGTERM` cannot be caught on Windows, and it always aborts the process (like `SIGKILL` on Unix).
+ // Therefore, this feature and those tests do not make sense on Windows.
+ if (process.platform !== 'win32') {
++/*
+ 	test('`forceKillAfterTimeout: false` should not kill after a timeout', async t => {
+ 		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
+ 		await pEvent(subprocess, 'message');
+@@ -31,7 +32,7 @@ if (process.platform !== 'win32') {
+ 		t.true(isRunning(subprocess.pid));
+ 		subprocess.kill('SIGKILL');
+ 	});
+-
++*/
+ 	test('`forceKillAfterTimeout: number` should kill after a timeout', async t => {
+ 		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
+ 		await pEvent(subprocess, 'message');
+@@ -139,6 +140,7 @@ test('spawnAndExit detached', spawnAndExit, false, true);
+ test('spawnAndExit cleanup detached', spawnAndExit, true, true);
+ 
+ // When parent process exits before child process
++/*
+ const spawnAndKill = async (t, [signal, cleanup, detached, isKilled]) => {
+ 	const subprocess = execa('sub-process.js', [cleanup, detached], {stdio: ['ignore', 'ignore', 'ignore', 'ipc']});
+ 
+@@ -150,14 +152,14 @@ const spawnAndKill = async (t, [signal, cleanup, detached, isKilled]) => {
+ 
+ 	await t.throwsAsync(subprocess);
+ 
+-	t.false(isRunning(subprocess.pid));
++        /* t.false(isRunning(subprocess.pid));
+ 	t.is(isRunning(pid), !isKilled);
+ 
+ 	if (isRunning(pid)) {
+ 		process.kill(pid, 'SIGKILL');
+ 	}
+ };
+-
++*/
+ // Without `options.cleanup`:
+ //   - on Windows subprocesses are killed if `options.detached: false`, but not
+ //     if `options.detached: true`
+@@ -165,6 +167,7 @@ const spawnAndKill = async (t, [signal, cleanup, detached, isKilled]) => {
+ // With `options.cleanup`, subprocesses are always killed
+ //   - `options.cleanup` with SIGKILL is a noop, since it cannot be handled
+ const exitIfWindows = process.platform === 'win32';
++/*
+ test('spawnAndKill SIGTERM', spawnAndKill, ['SIGTERM', false, false, exitIfWindows]);
+ test('spawnAndKill SIGKILL', spawnAndKill, ['SIGKILL', false, false, exitIfWindows]);
+ test('spawnAndKill cleanup SIGTERM', spawnAndKill, ['SIGTERM', true, false, true]);
+@@ -173,7 +176,7 @@ test('spawnAndKill detached SIGTERM', spawnAndKill, ['SIGTERM', false, true, fal
+ test('spawnAndKill detached SIGKILL', spawnAndKill, ['SIGKILL', false, true, false]);
+ test('spawnAndKill cleanup detached SIGTERM', spawnAndKill, ['SIGTERM', true, true, false]);
+ test('spawnAndKill cleanup detached SIGKILL', spawnAndKill, ['SIGKILL', true, true, false]);
+-
++*/
+ // See #128
+ test('removes exit handler on exit', async t => {
+ 	// @todo this relies on `signal-exit` internals
+diff --git a/test/pipe.js b/test/pipe.js
+index 264f41f..9281c75 100644
+--- a/test/pipe.js
++++ b/test/pipe.js
+@@ -1,7 +1,7 @@
+ import {PassThrough, Readable} from 'node:stream';
+ import {spawn} from 'node:child_process';
+ import {readFile} from 'node:fs/promises';
+-import tempfile from 'tempfile';
++//import tempfile from 'tempfile';
+ import test from 'ava';
+ import getStream from 'get-stream';
+ import {execa} from '../index.js';
+@@ -30,7 +30,7 @@ test('pipeStdout() can pipe to streams', pipeToStream, 'noop.js', 'pipeStdout',
+ test('pipeStderr() can pipe to streams', pipeToStream, 'noop-err.js', 'pipeStderr', 'stderr');
+ test('pipeAll() can pipe stdout to streams', pipeToStream, 'noop.js', 'pipeAll', 'stdout');
+ test('pipeAll() can pipe stderr to streams', pipeToStream, 'noop-err.js', 'pipeAll', 'stderr');
+-
++/*
+ const pipeToFile = async (t, fixtureName, funcName, streamName) => {
+ 	const file = tempfile({extension: '.txt'});
+ 	const result = await execa(fixtureName, ['test'], {all: true})[funcName](file);
+@@ -42,7 +42,7 @@ test('pipeStdout() can pipe to files', pipeToFile, 'noop.js', 'pipeStdout', 'std
+ test('pipeStderr() can pipe to files', pipeToFile, 'noop-err.js', 'pipeStderr', 'stderr');
+ test('pipeAll() can pipe stdout to files', pipeToFile, 'noop.js', 'pipeAll', 'stdout');
+ test('pipeAll() can pipe stderr to files', pipeToFile, 'noop-err.js', 'pipeAll', 'stderr');
+-
++*/
+ const invalidTarget = (t, funcName, getTarget) => {
+ 	t.throws(() => execa('noop.js', {all: true})[funcName](getTarget()), {
+ 		message: /a stream or an Execa child process/,
+diff --git a/test/stream.js b/test/stream.js
+index 3911a01..452292c 100644
+--- a/test/stream.js
++++ b/test/stream.js
+@@ -7,7 +7,7 @@ import {promisify} from 'node:util';
+ import test from 'ava';
+ import getStream from 'get-stream';
+ import {pEvent} from 'p-event';
+-import tempfile from 'tempfile';
++/* import tempfile from 'tempfile' */;
+ import {execa, execaSync, $} from '../index.js';
+ import {setFixtureDir, FIXTURES_DIR} from './helpers/fixtures-dir.js';
+ 
+@@ -60,7 +60,7 @@ test('can pass encoding null', checkBufferEncoding, null);
+ test('validate unknown encodings', async t => {
+ 	await t.throwsAsync(execa('noop.js', {encoding: 'unknownEncoding'}), {code: 'ERR_UNKNOWN_ENCODING'});
+ });
+-
++/*
+ test('pass `stdout` to a file descriptor', async t => {
+ 	const file = tempfile({extension: '.txt'});
+ 	await execa('noop.js', ['foo bar'], {stdout: fs.openSync(file, 'w')});
+@@ -72,7 +72,7 @@ test('pass `stderr` to a file descriptor', async t => {
+ 	await execa('noop-err.js', ['foo bar'], {stderr: fs.openSync(file, 'w')});
+ 	t.is(fs.readFileSync(file, 'utf8'), 'foo bar\n');
+ });
+-
++*/
+ test.serial('result.all shows both `stdout` and `stderr` intermixed', async t => {
+ 	const {all} = await execa('noop-132.js', {all: true});
+ 	t.is(all, '132');
+@@ -119,7 +119,7 @@ test('input option can be used with $', async t => {
+ 	const {stdout} = await $({input: 'foobar'})`stdin.js`;
+ 	t.is(stdout, 'foobar');
+ });
+-
++/*
+ test('inputFile can be set', async t => {
+ 	const inputFile = tempfile();
+ 	fs.writeFileSync(inputFile, 'howdy');
+@@ -133,7 +133,7 @@ test('inputFile can be set with $', async t => {
+ 	const {stdout} = await $({inputFile})`stdin.js`;
+ 	t.is(stdout, 'howdy');
+ });
+-
++*/
+ test('inputFile and input cannot be both set', t => {
+ 	t.throws(() => execa('stdin.js', {inputFile: '', input: ''}), {
+ 		message: /cannot be both set/,
+@@ -178,7 +178,7 @@ test('helpful error trying to provide an input stream in sync mode', t => {
+ 		{message: /The `input` option cannot be a stream in sync mode/},
+ 	);
+ });
+-
++/*
+ test('inputFile can be set - sync', t => {
+ 	const inputFile = tempfile();
+ 	fs.writeFileSync(inputFile, 'howdy');
+@@ -192,7 +192,7 @@ test('inputFile option can be used with $.sync', t => {
+ 	const {stdout} = $({inputFile}).sync`stdin.js`;
+ 	t.is(stdout, 'howdy');
+ });
+-
++*/
+ test('inputFile and input cannot be both set - sync', t => {
+ 	t.throws(() => execaSync('stdin.js', {inputFile: '', input: ''}), {
+ 		message: /cannot be both set/,
+diff --git a/test/test.js b/test/test.js
+index 44dfe61..ab55c2f 100644
+--- a/test/test.js
++++ b/test/test.js
+@@ -2,8 +2,8 @@ import path from 'node:path';
+ import process from 'node:process';
+ import {fileURLToPath, pathToFileURL} from 'node:url';
+ import test from 'ava';
+-import isRunning from 'is-running';
+-import getNode from 'get-node';
++//import isRunning from 'is-running';
++//import getNode from 'get-node';
+ import {execa, execaSync, $} from '../index.js';
+ import {setFixtureDir, PATH_KEY} from './helpers/fixtures-dir.js';
+ 
+@@ -110,13 +110,13 @@ test('localDir option', async t => {
+ 	const envPaths = stdout.split(path.delimiter);
+ 	t.true(envPaths.some(envPath => envPath.endsWith('.bin')));
+ });
+-
++/*
+ test('execPath option', async t => {
+ 	const {path: execPath} = await getNode('16.0.0');
+ 	const {stdout} = await execa('node', ['-p', 'process.env.Path || process.env.PATH'], {preferLocal: true, execPath});
+ 	t.true(stdout.includes('16.0.0'));
+ });
+-
++*/
+ test('stdin errors are handled', async t => {
+ 	const subprocess = execa('noop.js');
+ 	subprocess.stdin.emit('error', new Error('test'));
+@@ -257,7 +257,7 @@ test('detach child process', async t => {
+ 	const {stdout} = await execa('detach.js');
+ 	const pid = Number(stdout);
+ 	t.true(Number.isInteger(pid));
+-	t.true(isRunning(pid));
++	//t.true(isRunning(pid));
+ 
+ 	process.kill(pid, 'SIGKILL');
+ });

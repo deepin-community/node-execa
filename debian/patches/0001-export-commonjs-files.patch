@@ -1,0 +1,80 @@
+From: Yadd <yadd@debian.org>
+Date: Thu, 2 Nov 2023 00:07:52 +0000
+Subject: export commonjs files
+
+Forwarded: not-needed
+Last-Update: 2022-03-30
+---
+ human-signals/package.json | 5 +++--
+ onetime/package.json       | 7 ++++++-
+ package.json               | 5 ++++-
+ 3 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/human-signals/package.json b/human-signals/package.json
+index c64d8e2..9c03afa 100644
+--- a/human-signals/package.json
++++ b/human-signals/package.json
+@@ -4,12 +4,13 @@
+   "type": "module",
+   "exports": {
+     "types": "./build/src/main.d.ts",
+-    "default": "./build/src/main.js"
++    "import": "./build/src/main.js",
++    "require": "./build/src/main.cjs"
+   },
+   "main": "./build/src/main.js",
+   "types": "./build/src/main.d.ts",
+   "files": [
+-    "build/src/**/*.{js,json,d.ts}",
++    "build/src/**/*.{js,cjs,json,d.ts}",
+     "!build/src/**/*.test.js",
+     "!build/src/{helpers,fixtures}"
+   ],
+diff --git a/onetime/package.json b/onetime/package.json
+index 475a1e3..338adeb 100644
+--- a/onetime/package.json
++++ b/onetime/package.json
+@@ -11,7 +11,11 @@
+ 		"url": "https://sindresorhus.com"
+ 	},
+ 	"type": "module",
+-	"exports": "./index.js",
++	"module": "./index.js",
++	"exports": {
++		"import": "./index.js",
++		"require": "./index.cjs"
++	},
+ 	"engines": {
+ 		"node": ">=12"
+ 	},
+@@ -19,6 +23,7 @@
+ 		"test": "xo && ava && tsd"
+ 	},
+ 	"files": [
++		"index.cjs",
+ 		"index.js",
+ 		"index.d.ts"
+ 	],
+diff --git a/package.json b/package.json
+index 24ff179..19ed888 100644
+--- a/package.json
++++ b/package.json
+@@ -13,7 +13,8 @@
+ 	"type": "module",
+ 	"exports": {
+ 		"types": "./index.d.ts",
+-		"default": "./index.js"
++		"import": "./index.js",
++		"require": "./index.cjs"
+ 	},
+ 	"engines": {
+ 		"node": ">=16.17"
+@@ -22,6 +23,8 @@
+ 		"test": "xo && c8 ava && tsd"
+ 	},
+ 	"files": [
++		"execa.cjs",
++		"index.cjs",
+ 		"index.js",
+ 		"index.d.ts",
+ 		"lib"

@@ -1,3 +1,19 @@
+node-execa (8.0.1+dfsg1+~cs12.0.0-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream version
+  * Remove cross-spawn
+
+ -- Bastien Roucariès <rouca@debian.org>  Sat, 04 Nov 2023 14:55:59 +0000
+
+node-execa (6.1.0+dfsg1+~cs16.0.4-10) unstable; urgency=medium
+
+  * Team upload
+  * Port to newer node-get-stream
+  * Use ava for testing
+
+ -- Bastien Roucariès <rouca@debian.org>  Fri, 03 Nov 2023 20:48:58 +0000
+
 node-execa (6.1.0+dfsg1+~cs16.0.4-9) unstable; urgency=medium
 
   * Team upload

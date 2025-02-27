@@ -1,17 +1,16 @@
-import path from 'node:path';
 import process from 'node:process';
-import {fileURLToPath} from 'node:url';
 import test from 'ava';
 import {pEvent} from 'p-event';
 import isRunning from 'is-running';
 import {execa, execaSync} from '../index.js';
+import {setFixtureDir} from './helpers/fixtures-dir.js';
 
-process.env.PATH = fileURLToPath(new URL('fixtures', import.meta.url)) + path.delimiter + process.env.PATH;
+setFixtureDir();
 
 const TIMEOUT_REGEXP = /timed out after/;
 
 test('kill("SIGKILL") should terminate cleanly', async t => {
-	const subprocess = execa('node', ['./test/fixtures/no-killable.js'], {stdio: ['ipc']});
+	const subprocess = execa('no-killable.js', {stdio: ['ipc']});
 	await pEvent(subprocess, 'message');
 
 	subprocess.kill('SIGKILL');
@@ -24,7 +23,7 @@ test('kill("SIGKILL") should terminate cleanly', async t => {
 // Therefore, this feature and those tests do not make sense on Windows.
 if (process.platform !== 'win32') {
 	test('`forceKillAfterTimeout: false` should not kill after a timeout', async t => {
-		const subprocess = execa('node', ['./test/fixtures/no-killable.js'], {stdio: ['ipc']});
+		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
 		await pEvent(subprocess, 'message');
 
 		subprocess.kill('SIGTERM', {forceKillAfterTimeout: false});
@@ -34,7 +33,7 @@ if (process.platform !== 'win32') {
 	});
 
 	test('`forceKillAfterTimeout: number` should kill after a timeout', async t => {
-		const subprocess = execa('node', ['./test/fixtures/no-killable.js'], {stdio: ['ipc']});
+		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
 		await pEvent(subprocess, 'message');
 
 		subprocess.kill('SIGTERM', {forceKillAfterTimeout: 50});
@@ -44,7 +43,7 @@ if (process.platform !== 'win32') {
 	});
 
 	test('`forceKillAfterTimeout: true` should kill after a timeout', async t => {
-		const subprocess = execa('node', ['./test/fixtures/no-killable.js'], {stdio: ['ipc']});
+		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
 		await pEvent(subprocess, 'message');
 
 		subprocess.kill('SIGTERM', {forceKillAfterTimeout: true});
@@ -54,7 +53,7 @@ if (process.platform !== 'win32') {
 	});
 
 	test('kill() with no arguments should kill after a timeout', async t => {
-		const subprocess = execa('node', ['./test/fixtures/no-killable.js'], {stdio: ['ipc']});
+		const subprocess = execa('no-killable.js', {stdio: ['ipc']});
 		await pEvent(subprocess, 'message');
 
 		subprocess.kill();
@@ -178,17 +177,17 @@ test('spawnAndKill cleanup detached SIGKILL', spawnAndKill, ['SIGKILL', true, tr
 // See #128
 test('removes exit handler on exit', async t => {
 	// @todo this relies on `signal-exit` internals
-	const emitter = process.__signal_exit_emitter__;
+	const emitter = globalThis[Symbol.for('signal-exit emitter')];
 
 	const subprocess = execa('noop.js');
-	const listener = emitter.listeners('exit').pop();
+	const listener = emitter.listeners.exit.at(-1);
 
 	await new Promise((resolve, reject) => {
 		subprocess.on('error', reject);
 		subprocess.on('exit', resolve);
 	});
 
-	const included = emitter.listeners('exit').includes(listener);
+	const included = emitter.listeners.exit.includes(listener);
 	t.false(included);
 });
 
