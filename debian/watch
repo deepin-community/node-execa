@@ -7,13 +7,6 @@ filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-execa-$1/ \
 
 opts=\
 ctype=nodejs,\
-component=cross-spawn,\
-dversionmangle=auto,\
-filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-node-cross-spawn-$1/ \
- https://github.com/moxystudio/node-cross-spawn/tags .*/archive/.*/v?([\d\.]+).tar.gz checksum
-
-opts=\
-ctype=nodejs,\
 component=human-signals,\
 dversionmangle=auto,\
 filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-human-signals-$1/ \

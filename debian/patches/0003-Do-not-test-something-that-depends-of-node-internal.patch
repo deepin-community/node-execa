@@ -1,0 +1,30 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Fri, 3 Nov 2023 20:30:14 +0000
+Subject: Do not test something that depends of node internal
+
+Forwarded: not-needed
+---
+ test/kill.js | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/test/kill.js b/test/kill.js
+index 3f0566e..4c0d6d7 100644
+--- a/test/kill.js
++++ b/test/kill.js
+@@ -178,6 +178,7 @@ test('spawnAndKill cleanup detached SIGTERM', spawnAndKill, ['SIGTERM', true, tr
+ test('spawnAndKill cleanup detached SIGKILL', spawnAndKill, ['SIGKILL', true, true, false]);
+ */
+ // See #128
++/*
+ test('removes exit handler on exit', async t => {
+ 	// @todo this relies on `signal-exit` internals
+ 	const emitter = globalThis[Symbol.for('signal-exit emitter')];
+@@ -193,7 +194,7 @@ test('removes exit handler on exit', async t => {
+ 	const included = emitter.listeners.exit.includes(listener);
+ 	t.false(included);
+ });
+-
++*/
+ test('cancel method kills the subprocess', t => {
+ 	const subprocess = execa('node');
+ 	subprocess.cancel();

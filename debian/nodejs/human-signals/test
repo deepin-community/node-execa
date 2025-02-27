@@ -1,1 +1,1 @@
-tape test/main.js
+ava build/src/main.test.js

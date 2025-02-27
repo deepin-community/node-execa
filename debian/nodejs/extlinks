@@ -1,2 +1,14 @@
 @rollup/plugin-commonjs
 @rollup/plugin-node-resolve
+get-stream
+is-stream
+merge-stream
+npm-run-path
+signal-exit
+strip-final-newline
+ava test
+mimic-fn test
+p-event test
+semver test
+ajv test
+path-key test

@@ -1,14 +1,13 @@
-import path from 'node:path';
 import process from 'node:process';
 import childProcess from 'node:child_process';
-import {fileURLToPath} from 'node:url';
 import {promisify} from 'node:util';
 import test from 'ava';
 import {execa, execaSync} from '../index.js';
+import {FIXTURES_DIR, setFixtureDir} from './helpers/fixtures-dir.js';
 
 const pExec = promisify(childProcess.exec);
 
-process.env.PATH = fileURLToPath(new URL('fixtures', import.meta.url)) + path.delimiter + process.env.PATH;
+setFixtureDir();
 
 const TIMEOUT_REGEXP = /timed out after/;
 
@@ -79,10 +78,7 @@ test('error.shortMessage does not contain stdout/stderr', async t => {
 
 test('Original error.message is kept', async t => {
 	const {originalMessage} = await t.throwsAsync(execa('noop.js', {cwd: 1}));
-	// On Node >=14.18.0, the error message is
-	// `The "options.cwd" property must be of type string or an instance of Buffer or URL. Received type number (1)`
-	t.true(originalMessage.startsWith('The "options.cwd" property must be of type string'));
-	t.true(originalMessage.includes('. Received type number'));
+	t.true(originalMessage.startsWith('The "options.cwd" property must be of type string or an instance of Buffer or URL. Received type number'));
 });
 
 test('failed is false on success', async t => {
@@ -215,4 +211,15 @@ test('error.code is undefined on success', async t => {
 test('error.code is defined on failure if applicable', async t => {
 	const {code} = await t.throwsAsync(execa('noop.js', {cwd: 1}));
 	t.is(code, 'ERR_INVALID_ARG_TYPE');
+});
+
+test('error.cwd is defined on failure if applicable', async t => {
+	const {cwd} = await t.throwsAsync(execa('noop-throw.js', [], {cwd: FIXTURES_DIR}));
+	t.is(cwd, FIXTURES_DIR);
+});
+
+test('error.cwd is undefined on failure if not passed as options', async t => {
+	const expectedCwd = process.cwd();
+	const {cwd} = await t.throwsAsync(execa('noop-throw.js'));
+	t.is(cwd, expectedCwd);
 });

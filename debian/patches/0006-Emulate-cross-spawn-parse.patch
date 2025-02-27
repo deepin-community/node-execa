@@ -1,0 +1,58 @@
+From: =?utf-8?q?Bastien_Roucari=C3=A8s?= <rouca@debian.org>
+Date: Sat, 4 Nov 2023 14:53:36 +0000
+Subject: Emulate cross-spawn parse
+
+Do not need to import insecure cross-spawn
+
+Forwarded: not-needed
+---
+ index.js | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/index.js b/index.js
+index fa41762..511c53d 100644
+--- a/index.js
++++ b/index.js
+@@ -2,7 +2,6 @@ import {Buffer} from 'node:buffer';
+ import path from 'node:path';
+ import childProcess from 'node:child_process';
+ import process from 'node:process';
+-import crossSpawn from 'cross-spawn';
+ import stripFinalNewline from 'strip-final-newline';
+ import {npmRunPathEnv} from 'npm-run-path';
+ import onetime from 'onetime';
+@@ -27,8 +26,33 @@ const getEnv = ({env: envOption, extendEnv, preferLocal, localDir, execPath}) =>
+ 	return env;
+ };
+ 
++function parse(command, args, options) {
++    // Normalize arguments, similar to nodejs
++    if (args && !Array.isArray(args)) {
++        options = args;
++        args = null;
++    }
++
++    args = args ? args.slice(0) : []; // Clone array to avoid changing the original
++    options = Object.assign({}, options); // Clone object to avoid changing the original
++
++    // Build our parsed object
++    const parsed = {
++        command,
++        args,
++        options,
++        file: undefined,
++        original: {
++            command,
++            args,
++        },
++    };
++
++    return parsed
++}
++
+ const handleArguments = (file, args, options = {}) => {
+-	const parsed = crossSpawn._parse(file, args, options);
++	const parsed = parse(file, args, options);
+ 	file = parsed.command;
+ 	args = parsed.args;
+ 	options = parsed.options;

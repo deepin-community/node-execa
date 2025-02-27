@@ -1,4 +1,2 @@
-echo 'ava not packaged'
-if [ "$AUTOPKGTEST_TMP" != "" ]; then
-	exit 77
-fi
+test -e test/fixtures/fast-exit-linux || ln -s /usr/bin/true test/fixtures/fast-exit-linux
+ava -c 1 -s  --no-worker-threads test/*

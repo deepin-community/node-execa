@@ -1,31 +1,31 @@
-import { constants } from 'os'
+import { constants } from 'node:os'
 
 import { SIGRTMAX } from './realtime.js'
 import { getSignals } from './signals.js'
 
 // Retrieve `signalsByName`, an object mapping signal name to signal properties.
 // We make sure the object is sorted by `number`.
-const getSignalsByName = function () {
+const getSignalsByName = () => {
   const signals = getSignals()
-  return signals.reduce(getSignalByName, {})
+  return Object.fromEntries(signals.map(getSignalByName))
 }
 
-const getSignalByName = function (
-  signalByNameMemo,
-  { name, number, description, supported, action, forced, standard },
-) {
-  return {
-    ...signalByNameMemo,
-    [name]: { name, number, description, supported, action, forced, standard },
-  }
-}
+const getSignalByName = ({
+  name,
+  number,
+  description,
+  supported,
+  action,
+  forced,
+  standard,
+}) => [name, { name, number, description, supported, action, forced, standard }]
 
 export const signalsByName = getSignalsByName()
 
 // Retrieve `signalsByNumber`, an object mapping signal number to signal
 // properties.
 // We make sure the object is sorted by `number`.
-const getSignalsByNumber = function () {
+const getSignalsByNumber = () => {
   const signals = getSignals()
   const length = SIGRTMAX + 1
   const signalsA = Array.from({ length }, (value, number) =>
@@ -34,7 +34,7 @@ const getSignalsByNumber = function () {
   return Object.assign({}, ...signalsA)
 }
 
-const getSignalByNumber = function (number, signals) {
+const getSignalByNumber = (number, signals) => {
   const signal = findSignalByNumber(number, signals)
 
   if (signal === undefined) {
@@ -57,7 +57,7 @@ const getSignalByNumber = function (number, signals) {
 
 // Several signals might end up sharing the same number because of OS-specific
 // numbers, in which case those prevail.
-const findSignalByNumber = function (number, signals) {
+const findSignalByNumber = (number, signals) => {
   const signal = signals.find(({ name }) => constants.signals[name] === number)
 
   if (signal !== undefined) {

@@ -1,15 +1,19 @@
 import {Buffer} from 'node:buffer';
-import path from 'node:path';
+import {exec} from 'node:child_process';
 import process from 'node:process';
 import fs from 'node:fs';
-import {fileURLToPath} from 'node:url';
 import Stream from 'node:stream';
+import {promisify} from 'node:util';
 import test from 'ava';
 import getStream from 'get-stream';
+import {pEvent} from 'p-event';
 import tempfile from 'tempfile';
-import {execa, execaSync} from '../index.js';
+import {execa, execaSync, $} from '../index.js';
+import {setFixtureDir, FIXTURES_DIR} from './helpers/fixtures-dir.js';
 
-process.env.PATH = fileURLToPath(new URL('fixtures', import.meta.url)) + path.delimiter + process.env.PATH;
+const pExec = promisify(exec);
+
+setFixtureDir();
 
 test('buffer', async t => {
 	const {stdout} = await execa('noop.js', ['foo'], {encoding: null});
@@ -17,15 +21,55 @@ test('buffer', async t => {
 	t.is(stdout.toString(), 'foo');
 });
 
+const checkEncoding = async (t, encoding) => {
+	const {stdout} = await execa('noop-no-newline.js', [STRING_TO_ENCODE], {encoding});
+	t.is(stdout, BUFFER_TO_ENCODE.toString(encoding));
+
+	const {stdout: nativeStdout} = await pExec(`node noop-no-newline.js ${STRING_TO_ENCODE}`, {encoding, cwd: FIXTURES_DIR});
+	t.is(stdout, nativeStdout);
+};
+
+// This string gives different outputs with each encoding type
+const STRING_TO_ENCODE = '\u1000.';
+const BUFFER_TO_ENCODE = Buffer.from(STRING_TO_ENCODE);
+
+test('can pass encoding "utf8"', checkEncoding, 'utf8');
+test('can pass encoding "utf-8"', checkEncoding, 'utf8');
+test('can pass encoding "utf16le"', checkEncoding, 'utf16le');
+test('can pass encoding "utf-16le"', checkEncoding, 'utf16le');
+test('can pass encoding "ucs2"', checkEncoding, 'utf16le');
+test('can pass encoding "ucs-2"', checkEncoding, 'utf16le');
+test('can pass encoding "latin1"', checkEncoding, 'latin1');
+test('can pass encoding "binary"', checkEncoding, 'latin1');
+test('can pass encoding "ascii"', checkEncoding, 'ascii');
+test('can pass encoding "hex"', checkEncoding, 'hex');
+test('can pass encoding "base64"', checkEncoding, 'base64');
+test('can pass encoding "base64url"', checkEncoding, 'base64url');
+
+const checkBufferEncoding = async (t, encoding) => {
+	const {stdout} = await execa('noop-no-newline.js', [STRING_TO_ENCODE], {encoding});
+	t.true(BUFFER_TO_ENCODE.equals(stdout));
+
+	const {stdout: nativeStdout} = await pExec(`node noop-no-newline.js ${STRING_TO_ENCODE}`, {encoding, cwd: FIXTURES_DIR});
+	t.true(BUFFER_TO_ENCODE.equals(nativeStdout));
+};
+
+test('can pass encoding "buffer"', checkBufferEncoding, 'buffer');
+test('can pass encoding null', checkBufferEncoding, null);
+
+test('validate unknown encodings', async t => {
+	await t.throwsAsync(execa('noop.js', {encoding: 'unknownEncoding'}), {code: 'ERR_UNKNOWN_ENCODING'});
+});
+
 test('pass `stdout` to a file descriptor', async t => {
-	const file = tempfile('.txt');
-	await execa('test/fixtures/noop.js', ['foo bar'], {stdout: fs.openSync(file, 'w')});
+	const file = tempfile({extension: '.txt'});
+	await execa('noop.js', ['foo bar'], {stdout: fs.openSync(file, 'w')});
 	t.is(fs.readFileSync(file, 'utf8'), 'foo bar\n');
 });
 
 test('pass `stderr` to a file descriptor', async t => {
-	const file = tempfile('.txt');
-	await execa('test/fixtures/noop-err.js', ['foo bar'], {stderr: fs.openSync(file, 'w')});
+	const file = tempfile({extension: '.txt'});
+	await execa('noop-err.js', ['foo bar'], {stderr: fs.openSync(file, 'w')});
 	t.is(fs.readFileSync(file, 'utf8'), 'foo bar\n');
 });
 
@@ -71,6 +115,31 @@ test('input can be a Stream', async t => {
 	t.is(stdout, 'howdy');
 });
 
+test('input option can be used with $', async t => {
+	const {stdout} = await $({input: 'foobar'})`stdin.js`;
+	t.is(stdout, 'foobar');
+});
+
+test('inputFile can be set', async t => {
+	const inputFile = tempfile();
+	fs.writeFileSync(inputFile, 'howdy');
+	const {stdout} = await execa('stdin.js', {inputFile});
+	t.is(stdout, 'howdy');
+});
+
+test('inputFile can be set with $', async t => {
+	const inputFile = tempfile();
+	fs.writeFileSync(inputFile, 'howdy');
+	const {stdout} = await $({inputFile})`stdin.js`;
+	t.is(stdout, 'howdy');
+});
+
+test('inputFile and input cannot be both set', t => {
+	t.throws(() => execa('stdin.js', {inputFile: '', input: ''}), {
+		message: /cannot be both set/,
+	});
+});
+
 test('you can write to child.stdin', async t => {
 	const subprocess = execa('stdin.js');
 	subprocess.stdin.end('unicorns');
@@ -80,6 +149,11 @@ test('you can write to child.stdin', async t => {
 
 test('input option can be a String - sync', t => {
 	const {stdout} = execaSync('stdin.js', {input: 'foobar'});
+	t.is(stdout, 'foobar');
+});
+
+test('input option can be used with $.sync', t => {
+	const {stdout} = $({input: 'foobar'}).sync`stdin.js`;
 	t.is(stdout, 'foobar');
 });
 
@@ -103,6 +177,26 @@ test('helpful error trying to provide an input stream in sync mode', t => {
 		},
 		{message: /The `input` option cannot be a stream in sync mode/},
 	);
+});
+
+test('inputFile can be set - sync', t => {
+	const inputFile = tempfile();
+	fs.writeFileSync(inputFile, 'howdy');
+	const {stdout} = execaSync('stdin.js', {inputFile});
+	t.is(stdout, 'howdy');
+});
+
+test('inputFile option can be used with $.sync', t => {
+	const inputFile = tempfile();
+	fs.writeFileSync(inputFile, 'howdy');
+	const {stdout} = $({inputFile}).sync`stdin.js`;
+	t.is(stdout, 'howdy');
+});
+
+test('inputFile and input cannot be both set - sync', t => {
+	t.throws(() => execaSync('stdin.js', {inputFile: '', input: ''}), {
+		message: /cannot be both set/,
+	});
 });
 
 test('maxBuffer affects stdout', async t => {
@@ -172,6 +266,11 @@ test('buffer: false > promise rejects when process returns non-zero', async t =>
 	const subprocess = execa('fail.js', {buffer: false});
 	const {exitCode} = await t.throwsAsync(subprocess);
 	t.is(exitCode, 2);
+});
+
+test('buffer: false > emits end event when promise is rejected', async t => {
+	const subprocess = execa('wrong command', {buffer: false, reject: false});
+	await t.notThrowsAsync(Promise.all([subprocess, pEvent(subprocess.stdout, 'end')]));
 });
 
 test('can use all: true with stdout: ignore', async t => {
